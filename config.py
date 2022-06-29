@@ -21,6 +21,7 @@ class Config(object):
     SECRET_KEY = os.environ.get('FLASK_SECRET_KEY')
     DB_USERNAME = os.environ.get('FLASK_DB_USERNAME')
     DB_PASSWORD = os.environ.get('FLASK_DB_PASSWORD')
+    ITRACKER_ADMIN = os.environ.get('ITRACKER_ADMIN')
     # For SSL encryption see: https://blog.miguelgrinberg.com/post/running-your-flask-application-over-https
     # SSL_REDIRECT = False
 
