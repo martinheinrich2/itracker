@@ -19,6 +19,15 @@ def make_shell_context():
     return dict(db=db, user=User)
 
 
+# Add Unit tests
+@app.cli.command()
+def test():
+    import unittest
+    # Finds and returns all test modules in the directory and subdirectories.
+    tests = unittest.TestLoader().discover('tests')
+    # Displays results as text
+    unittest.TextTestRunner(verbosity=2).run(tests)
+
 
 if __name__ == '__main__':
     # On macOS change port or deactivate Sharing/AirPlay receiver
