@@ -1,11 +1,13 @@
 # Application package constructor
 from flask import Flask
+from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from config import config
 
 
 # Create uninitialized instances because there is no application instance to initialize with
+moment = Moment()
 db = SQLAlchemy()
 login_manager = LoginManager()
 
@@ -25,6 +27,7 @@ def create_app(config_name):
     print(f"In __init__.py config is: {config_name}")
 
     config[config_name].init_app(app)
+    moment.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
 

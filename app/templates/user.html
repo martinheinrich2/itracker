@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+<title>{% block title %}ITracker - {{ current_user.name }}{% endblock %}</title>
+
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ current_user.name }}</h1>
+    <br>
+    <!-- {% if user.job_description %}
+    <p>{{ user.job_description }}</p>
+    {% endif %} -->
+
+    <!-- {% if current_user.is_administrator() %}
+    <p>User is Administrator</p>
+    {% endif %} -->
+
+    <br>
+    <p>Member since {{ moment(current_user.user_added).format('LLL') }}.</p>
+    <br>
+
+    <p>
+        <a class="btn btn-primary" href="{{ url_for('.edit_profile') }}">Edit Profile</a>
+    </p>
+</div>
+
+{% endblock %}
