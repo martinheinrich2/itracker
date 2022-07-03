@@ -79,6 +79,7 @@ class User(UserMixin, db.Model):
     user_added = db.Column(db.DateTime, default=datetime.utcnow)
     # Add password hash
     password_hash = db.Column(db.String(128))
+    issues = db.relationship('Issue', backref='author', lazy='dynamic')
 
     # Assigns the role Administrator if the email matches a config value,
     # otherwise set default role to User.
@@ -134,3 +135,25 @@ login_manager.anonymous_user = AnonymousUser
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+class Issue(db.Model):
+    __tablename__ = 'issues'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(64))
+    description = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    comments = db.relationship('Comment', backref='post', lazy='dynamic')
+    assigned_to = db.Column(db.String(64))
+    status = db.Column(db.Boolean, default=True)
+
+
+class Comment(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    disabled = db.Column(db.Boolean)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    issue_id = db.Column(db.Integer, db.ForeignKey('issues.id'))

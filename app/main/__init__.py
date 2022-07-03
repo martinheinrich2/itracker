@@ -5,7 +5,7 @@ from flask import Blueprint
 # Create a blueprint with name main and tell Flask the blueprint has its own template and static directories.
 main = Blueprint('main', __name__, static_folder='static', template_folder='templates')
 
-from . import views, errors
+from . import views, errors, forms
 from ..models import Permission
 
 

@@ -7,9 +7,9 @@
 <div class="page-header">
     <h1>{{ current_user.name }}</h1>
     <br>
-    <!-- {% if user.job_description %}
-    <p>{{ user.job_description }}</p>
-    {% endif %} -->
+    {% if user.job_description %}
+        <p>{{ user.job_description }}</p>
+    {% endif %}
 
     <!-- {% if current_user.is_administrator() %}
     <p>User is Administrator</p>

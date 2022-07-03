@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+{% endfor %}
+
+
+<div class="page-header">
+    <h1>Issue</h1>
+</div>
+
+<br/>
+
+<div class="shadow p-3 mb-5 bg-body rounded">
+    <h2>{{ issue.title }}</h2> <br/>
+    By: {{ issue.author.name }} <br/>
+    Date: {{ issue.timestamp }} <br/>
+    Description: {{ issue.description }} <br/>
+    Assigned to: {{ issue.assigned_to }} <br/>
+
+    {% if issue.status %}
+    Status: OPEN
+    {% else %}
+    Status: CLOSED
+    {% endif %}
+</div>
+
+<a href="{{ url_for('main.issues') }}" class="btn btn-outline-secondary btn-sm">Back to Issues</a>
+
+{% endblock %}
