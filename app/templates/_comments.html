@@ -1,0 +1,13 @@
+
+{% for comment in comments %}
+
+    <div class="shadow p-3 mb-5 bg-body rounded">
+        <h2>Comment:</h2>
+        By:{{ comment.author.name }} - commented: {{ moment(comment.timestamp).format('LLL') }} <br>
+        {{ comment.body }} <br>
+
+        <br/>
+
+    </div>
+
+{% endfor %}

@@ -1,0 +1,19 @@
+<ul class="issues">
+    {% for issue in issues %}
+    <li class="issue">
+        <div class="shadow p-3 mb-5 bg-body rounded">
+            <h2><a href="{{ url_for('main.issue', id=issue.id) }}">{{ issue.title }}</a></h2>
+            By:{{ issue.author.name }}   - reported: {{ moment(issue.timestamp).format('LLL') }} <br>
+            {{ issue.description }} <br>
+            {% if issue.status %}
+            Status: OPEN
+            {% else %}
+            Status: CLOSED
+            {% endif %}
+            <br/>
+            <a href="{{ url_for('main.issue', id=issue.id) }}" class="btn btn-outline-secondary btn-sm">View Issue</a>
+
+        </div>
+    </li>
+    {% endfor %}
+</ul>

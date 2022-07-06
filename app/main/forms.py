@@ -15,7 +15,12 @@ class EditProfileForm(FlaskForm):
 class IssueForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired('Please enter title')])
     description = TextAreaField('Description', validators=[DataRequired('Please enter description.')])
-    assigned_to = StringField('Assigned to', validators=[DataRequired('Please enter department.')])
+    # assigned_to = StringField('Assigned to', validators=[DataRequired('Please enter department.')])
+    assigned_to = SelectField('Assigned to:', choices=[('Electrician', 'Electrician'),
+                                                       ('Housekeeping', 'Housekeeping'),
+                                                       ('IT', 'IT'),
+                                                       ('Janitor', 'Janitor'),
+                                                       ('Plumber', 'Plumber')])
     status = BooleanField('Status Open/Closed', default=True, validators=[AnyOf([True, False])])
     submit = SubmitField('Submit')
 

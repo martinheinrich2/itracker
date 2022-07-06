@@ -80,6 +80,7 @@ class User(UserMixin, db.Model):
     # Add password hash
     password_hash = db.Column(db.String(128))
     issues = db.relationship('Issue', backref='author', lazy='dynamic')
+    comments = db.relationship('Comment', backref='author', lazy='dynamic')
 
     # Assigns the role Administrator if the email matches a config value,
     # otherwise set default role to User.
@@ -144,7 +145,7 @@ class Issue(db.Model):
     description = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    comments = db.relationship('Comment', backref='post', lazy='dynamic')
+    comments = db.relationship('Comment', backref='issue', lazy='dynamic')
     assigned_to = db.Column(db.String(64))
     status = db.Column(db.Boolean, default=True)
 

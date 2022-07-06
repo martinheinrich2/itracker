@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 from . import main
 from .forms import EditProfileForm, IssueForm, CommentForm
 from .. import db
-from ..models import User, Role, Permission, Issue
+from ..models import User, Role, Permission, Issue, Comment
 from ..decorators import admin_required, permission_required
 
 
@@ -19,7 +19,8 @@ def index():
 @main.route('/user/<name>')
 def user(name):
     user = User.query.filter_by(name=name).first_or_404()
-    return render_template('user.html', user=user)
+    issues = user.issues.order_by(Issue.timestamp.desc()).all()
+    return render_template('user.html', user=user, issues=issues)
 
 
 # Edit User Profile page
@@ -74,8 +75,21 @@ def issues():
 
 # Show individual Issue
 @login_required
-@main.route('/post/<int:id>')
+@main.route('/issue/<int:id>', methods=['GET', 'POST'])
 def issue(id):
     # Grab individual post from the database
     issue = Issue.query.get_or_404(id)
-    return render_template('issue.html', issue=issue)
+    # Add Comment
+    form = CommentForm()
+    if current_user.can(Permission.WRITE) and form.validate_on_submit():
+        comment = Comment(body=form.body.data,
+                          issue_id=issue.id,
+                          author=current_user._get_current_object())
+        db.session.add(comment)
+        db.session.commit()
+        flash('Your comment has been saved.')
+        return redirect(url_for('.issue', id=issue.id))
+
+    comments = issue.comments.order_by(Comment.timestamp.desc()).all()
+    return render_template('issue.html', issue=issue, form=form,
+                           comments=comments)
