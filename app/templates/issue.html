@@ -15,12 +15,10 @@
     <h1>Issue</h1>
 </div>
 
-<br/>
-
 <div class="shadow p-3 mb-5 bg-body rounded">
-    <h2>{{ issue.title }}</h2> <br/>
-    By: {{ issue.author.name }} <br/>
-    Date: {{ moment(issue.timestamp).format('LLL') }} <br/>
+    <h2>{{ issue.title }}</h2>
+    Reported by: {{ issue.author.name }}<br/>
+    Reported at: {{ moment(issue.timestamp).format('LLL') }} <br/>
     Description: {{ issue.description }} <br/>
     Assigned to: {{ issue.assigned_to }} <br/>
     {% if issue.status %}
@@ -58,7 +56,9 @@
 {% include '_comments.html' %}
 </div>
 
-
 <a href="{{ url_for('main.issues') }}" class="btn btn-outline-secondary btn-sm">Back to Issues</a>
+{% if current_user.is_administrator() or current_user.is_moderator() %}
+<a href="{{ url_for('.edit_issue', id=issue.id) }}" class="btn btn-outline-danger btn-sm">Edit</a>
+{% endif %}
 
 {% endblock %}

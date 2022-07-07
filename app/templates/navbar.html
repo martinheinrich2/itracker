@@ -17,10 +17,6 @@
                 </li>
 
 
-                <li class="nav-item">
-                    <a class="nav-link" href="">Admin</a>
-                </li>
-
                 {% if current_user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('main.add_issue') }}">Create Issue</a>
@@ -47,6 +43,12 @@
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="{{ url_for('auth.change_password') }}">Change Password</a>
                         </li>
+
+                        {% if current_user.is_administrator() %}
+                        <li><a class="dropdown-item" href="">Change User Role</a>
+                        </li>
+
+                        {% endif %}
 
                         <li>
                             <hr class="dropdown-divider">

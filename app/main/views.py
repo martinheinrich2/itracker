@@ -1,6 +1,6 @@
 # Route applications are updated to be in the blueprint
-
-from flask import render_template, flash, redirect, url_for, request
+import flask
+from flask import render_template, flash, redirect, url_for, request, abort
 from flask_login import login_required, current_user
 from . import main
 from .forms import EditProfileForm, IssueForm, CommentForm
@@ -8,6 +8,8 @@ from .. import db
 from ..models import User, Role, Permission, Issue, Comment
 from ..decorators import admin_required, permission_required
 
+# Pagination default number of rows
+ROWS_PER_PAGE = 10
 
 # Main route to index.html
 @main.route('/')
@@ -18,9 +20,17 @@ def index():
 # Display user name
 @main.route('/user/<name>')
 def user(name):
+    # Grab all issues for user by name
     user = User.query.filter_by(name=name).first_or_404()
-    issues = user.issues.order_by(Issue.timestamp.desc()).all()
-    return render_template('user.html', user=user, issues=issues)
+    # Set the pagination configuration
+    page = request.args.get('page', 1, type=int)
+
+    issues = user.issues.order_by(Issue.timestamp.desc()).paginate(
+                                            page, per_page=ROWS_PER_PAGE, error_out=False)
+    # Return all variables because jinja is unable to read them in this page.
+    return render_template('user.html', user=user, issues=issues.items, issues_pages=issues.pages, page=page,
+                           has_prev=issues.has_prev, has_next=issues.has_next, next_num=issues.next_num,
+                           prev_num=issues.prev_num)
 
 
 # Edit User Profile page
@@ -40,6 +50,7 @@ def edit_profile():
     form.name.data = current_user.name
     form.job_description.data = current_user.job_description
     return render_template(('edit_profile.html'), form=form)
+
 
 # Add new issue
 @main.route('/add-issue', methods=['GET', 'POST'])
@@ -64,12 +75,39 @@ def add_issue():
     return render_template('add_issue.html', form=form)
 
 
+# Edit issue
+@main.route('/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_issue(id):
+    issue = Issue.query.get_or_404(id)
+    if not current_user.can(Permission.MODERATE) and not current_user.can(Permission.ADMIN):
+        abort(403)
+    form = IssueForm()
+    if form.validate_on_submit():
+        issue.title=form.title.data
+        issue.description=form.description.data
+        issue.assigned_to=form.assigned_to.data
+        issue.status=form.status.data
+        db.session.add(issue)
+        db.session.commit()
+        flash('The Issue has been updated!')
+        return redirect(url_for('.issue', id=issue.id))
+    form.title.data = issue.title
+    form.description.data = issue.description
+    form.assigned_to.data = issue.assigned_to
+    form.status.data = issue.status
+    return render_template('edit_issue.html', form=form)
+
+
 # Show all Issues Page
 @main.route('/issues')
 @login_required
 def issues():
-    # Grab all issues from the database
-    issues = Issue.query.order_by(Issue.timestamp)
+    # Set the pagination configuration
+    page = request.args.get('page', 1, type=int)
+    # Grab all issues from the database, use SQLAlchemy pagination
+    # issues = Issue.query.order_by(Issue.timestamp.desc())
+    issues = Issue.query.paginate(page=page, per_page=ROWS_PER_PAGE)
     return render_template('issues.html', issues=issues)
 
 

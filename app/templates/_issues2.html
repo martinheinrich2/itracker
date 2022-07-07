@@ -10,7 +10,7 @@
     </thead>
 
     <tbody>
-    {% for issue in issues.items %}
+    {% for issue in issues %}
       <tr>
         <td><a href="{{ url_for('main.issue', id=issue.id) }}">{{ issue.title }}</a></td>
         <td>{{ issue.author.name }}</td>
@@ -30,22 +30,22 @@
 
 <!-- Pagination Links-->
 <div class="text-right">
-    <a href="{{ url_for('main.issues', page=issues.prev_num) }}"
+    <a href="{{ url_for('main.user', name=current_user.name, page=prev_num) }}"
        class="btn btn-outline-dark
-       {% if issues.page == 1 %}disabled{% endif %}">
+       {% if page == 1 %}disabled{% endif %}">
         &laquo;
     </a>
 <!-- Loop through the number of pages to display a link for each-->
-{% for page_num in issues.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+{% for page_num in range(page, issues_pages+1) %}
 {% if page_num %}
 <!-- Check for the active page and set the link to "Active"-->
-            {% if issues.page == page_num %}
-            <a href="{{ url_for('main.issues', page=page_num) }}"
+            {% if page== page_num %}
+            <a href="{{ url_for('main.user', name=current_user.name, page=page_num) }}"
                class="btn btn-dark">
                 {{ page_num }}
             </a>
             {% else %}
-            <a href="{{ url_for('main.issues', page=page_num) }}"
+            <a href="{{ url_for('main.user', name=current_user.name, page=page_num) }}"
                class="btn btn-outline-dark">
                 {{ page_num }}
             </a>
@@ -54,12 +54,13 @@
             ...
         {% endif %}
     {% endfor %}
-    <a href="{{ url_for('main.issues', page=issues.next_num) }}"
+
+    <a href="{{ url_for('main.user', name=current_user.name, page=next_num) }}"
        class="btn btn-outline-dark
-       {% if issues.page == issues.pages %}disabled{% endif %}">
+       {% if page == issues_pages %}disabled{% endif %}">
         &raquo;
     </a>
 </div>
 <p class="text-right mt-3">
-   Showing page {{ issues.page }} of {{ issues.pages }}
+   Showing page {{ page }} of {{ issues_pages }}
 </p>
