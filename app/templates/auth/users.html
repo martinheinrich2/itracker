@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+
+
+<div class="page-header">
+    <h1>Users</h1>
+</div>
+
+<hr>
+<div class="container mt-3">
+  <table class="table table-hover">
+    <thead class="table-secondary">
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Joined</th>
+        <th>Role</th>
+      </tr>
+    </thead>
+
+    <tbody>
+    {% for user in users.items %}
+      <tr>
+        <td><a href="{{ url_for('auth.edit_user', id=user.id) }}">{{ user.name }}</a></td>
+        <td>{{ user.email }}</td>
+        <td>{{ moment(user.user_added).format('LLL') }}</td>
+        <td>{{ user.role.name }}</td>
+
+      </tr>
+     {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Pagination Links-->
+<div class="text-right">
+    <a href="{{ url_for('auth.list_users', page=users.prev_num) }}"
+       class="btn btn-outline-dark
+       {% if users.page == 1 %}disabled{% endif %}">
+        &laquo;
+    </a>
+<!-- Loop through the number of pages to display a link for each-->
+{% for page_num in users.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+{% if page_num %}
+<!-- Check for the active page and set the link to "Active"-->
+            {% if users.page == page_num %}
+            <a href="{{ url_for('auth.list_users', page=page_num) }}"
+               class="btn btn-dark">
+                {{ page_num }}
+            </a>
+            {% else %}
+            <a href="{{ url_for('auth.list_users', page=page_num) }}"
+               class="btn btn-outline-dark">
+                {{ page_num }}
+            </a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+    <a href="{{ url_for('auth.list_users', page=users.next_num) }}"
+       class="btn btn-outline-dark
+       {% if users.page == users.pages %}disabled{% endif %}">
+        &raquo;
+    </a>
+</div>
+<p class="text-right mt-3">
+   Showing page {{ users.page }} of {{ users.pages }}
+</p>
+
+{% endblock %}

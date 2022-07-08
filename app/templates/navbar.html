@@ -41,13 +41,10 @@
                         Account
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="{{ url_for('auth.change_password') }}">Change Password</a>
-                        </li>
+                        <li><a class="dropdown-item" href="{{ url_for('auth.change_password') }}">Change Password</a></li>
 
                         {% if current_user.is_administrator() %}
-                        <li><a class="dropdown-item" href="">Change User Role</a>
-                        </li>
-
+                        <li><a class="dropdown-item" href="{{ url_for('auth.list_users') }}">List Users</a></li>
                         {% endif %}
 
                         <li>
