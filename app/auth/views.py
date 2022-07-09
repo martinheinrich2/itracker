@@ -4,7 +4,7 @@ from . import auth
 from .. import db
 from ..models import User, Role, Permission
 from ..decorators import admin_required
-from .forms import LoginForm, ChangePasswordForm, RegistrationForm, ChangeUserForm
+from .forms import LoginForm, ChangePasswordForm, RegistrationForm, ChangeUserAdminForm
 
 
 # Pagination default value
@@ -87,19 +87,23 @@ def list_users():
 
 # Change User as Admin
 @auth.route('/user/<int:id>', methods=['GET', 'POST'])
+@login_required
 @admin_required
 def edit_user(id):
     user = User.query.get_or_404(id)
     if not current_user.can(Permission.ADMIN):
         abort(403)
-    form = ChangeUserForm()
+    form = ChangeUserAdminForm(user=user)
     if form.validate_on_submit():
-        user.name=form.name.data
-        user.role_id=form.role_id.data
+        user.email = form.email.data
+        user.name = form.name.data
+        user.role_id = form.role_id.data
         db.session.add(user)
         db.session.commit()
         flash('User has been updated!')
         return redirect(url_for('auth.list_users'))
+    form.email.data = user.email
     form.name.data = user.name
     form.role_id.data = user.role_id
-    return render_template('auth/edit_user.html', form=form)
+    return render_template('auth/edit_user.html', form=form, user=user)
+

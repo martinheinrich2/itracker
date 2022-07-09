@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, EmailField, SelectField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
-from ..models import User
+from ..models import User, Role
 
 
 class LoginForm(FlaskForm):
@@ -35,10 +35,26 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Email already registered')
 
 
-class ChangeUserForm(FlaskForm):
+class ChangeUserAdminForm(FlaskForm):
+    email = EmailField('Email', validators=[DataRequired(), Length(1, 64), Email()])
     name = StringField('Name:', validators=[DataRequired(), Length(1, 64), Regexp('[A-Za-z]', 0,
-                                                                                 'Usernames must have only letters.')])
-    role_id = SelectField('Role:', choices=[('1', 'User'),
-                                        ('2', 'Moderator'),
-                                        ('3', 'Administrator')], coerce=int)
+                                                                                  'Usernames must have only letters.')])
+    # role_id = SelectField('Role:', choices=[('1', 'User'),
+                                       # ('2', 'Moderator'),
+                                       # ('3', 'Administrator')], coerce=int)
+    # SelectField takes a list of tuples
+    role_id = SelectField('Role', coerce=int)
     submit = SubmitField('Submit')
+
+    # Get roles from database model
+    def __init__(self, user, *args, **kwargs):
+        super(ChangeUserAdminForm, self).__init__(*args, **kwargs)
+        self.role_id.choices = [(role_id.id, role_id.name)
+                                for role_id in Role.query.order_by(Role.name).all()]
+        self.user = user
+
+    # Check if email is in database
+    def validate_email(self, field):
+        if field.data != self.user.email and \
+                User.query.filter_by(email=field.data).first():
+            raise ValidationError('Email already registered')
