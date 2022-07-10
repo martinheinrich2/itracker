@@ -2,6 +2,7 @@
 import flask
 from flask import render_template, flash, redirect, url_for, request, abort
 from flask_login import login_required, current_user
+from sqlalchemy.exc import SQLAlchemyError
 from . import main
 from .forms import EditProfileForm, IssueForm, CommentForm
 from .. import db
@@ -76,7 +77,7 @@ def add_issue():
 
 
 # Edit issue
-@main.route('/edit/<int:id>', methods=['GET', 'POST'])
+@main.route('/edit-issue/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_issue(id):
     issue = Issue.query.get_or_404(id)
@@ -97,6 +98,44 @@ def edit_issue(id):
     form.assigned_to.data = issue.assigned_to
     form.status.data = issue.status
     return render_template('edit_issue.html', form=form)
+
+
+# Edit comment
+@main.route('/edit-comment/<int:id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def edit_comment(id):
+    comment = Comment.query.get_or_404(id)
+    if not current_user.can(Permission.ADMIN):
+        abort(403)
+    form = CommentForm()
+    if form.validate_on_submit():
+        comment.body = form.body.data
+        db.session.add(comment)
+        db.session.commit()
+        flash('The Comment has been updated!')
+        return redirect(url_for('.issues'))
+    form.body.data = comment.body
+    return render_template('edit_comment.html', form=form)
+
+
+# Delete Comment
+@main.route('/delete-comment/<int:id>')
+@login_required
+@admin_required
+def delete_comment(id):
+    comment_to_delete = Comment.query.get_or_404(id)
+    try:
+        db.session.delete(comment_to_delete)
+        db.session.commit()
+        flash('Comment was deleted!')
+        return redirect(url_for('.issues'))
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        message = f'There was a problem deleting the comment! Error: {error}'
+        flash(message)
+        return redirect(url_for('.issues'))
+
 
 
 # Show all Issues Page
