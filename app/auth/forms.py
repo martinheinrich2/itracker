@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, EmailField, SelectField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
-from ..models import User, Role
+from ..models import User, Role, Department
 
 
 class LoginForm(FlaskForm):
@@ -44,6 +44,7 @@ class ChangeUserAdminForm(FlaskForm):
                                        # ('3', 'Administrator')], coerce=int)
     # SelectField takes a list of tuples
     role_id = SelectField('Role', coerce=int)
+    department_id = SelectField('Department', coerce=int)
     submit = SubmitField('Submit')
 
     # Get roles from database model
@@ -51,6 +52,8 @@ class ChangeUserAdminForm(FlaskForm):
         super(ChangeUserAdminForm, self).__init__(*args, **kwargs)
         self.role_id.choices = [(role_id.id, role_id.name)
                                 for role_id in Role.query.order_by(Role.name).all()]
+        self.department_id.choices = [(department_id.id, department_id.name)
+                                      for department_id in Department.query.order_by(Department.name).all()]
         self.user = user
 
     # Check if email is in database

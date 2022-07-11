@@ -23,6 +23,7 @@
         <th>Email</th>
         <th>Joined</th>
         <th>Role</th>
+        <th>Department</th>
       </tr>
     </thead>
 
@@ -33,6 +34,7 @@
         <td>{{ user.email }}</td>
         <td>{{ moment(user.user_added).format('LLL') }}</td>
         <td>{{ user.role.name }}</td>
+        <td>{{ user.department.name }}</td>
 
       </tr>
      {% endfor %}

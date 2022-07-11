@@ -5,6 +5,30 @@ from flask_login import UserMixin, AnonymousUserMixin
 from . import db, login_manager
 
 
+class Department(db.Model):
+    __tablename__ = 'departments'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    users = db.relationship('User', backref='department', lazy='dynamic')
+
+    @staticmethod
+    def insert_departments():
+        departments = ['Administration', 'Building Services', 'Housekeeping', 'IT', 'Reception', 'Social Work',
+                       'Vehicles', 'Unknown']
+        default_department = 'Unknown'
+        for d in departments:
+            department = Department.query.filter_by(name=d).first()
+            if department is None:
+                department = Department(name=d)
+            department.default = (department.name == default_department)
+            db.session.add(department)
+        db.session.commit()
+
+    # Defining __repr__() method to control what to return for objects of users
+    def __repr__(self):
+        return '<Name %r>' % self.name
+
+
 class Permission:
     READ = 1
     COMMENT = 2
@@ -81,13 +105,13 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     issues = db.relationship('Issue', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
 
     # Assigns the role Administrator if the email matches a config value,
     # otherwise set default role to User.
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
-            print("Admin2:", current_app.config['ITRACKER_ADMIN'])
             if self.email == current_app.config['ITRACKER_ADMIN']:
                 print("Assigning Admin Privileges")
                 print(self.email)
@@ -95,6 +119,8 @@ class User(UserMixin, db.Model):
                 print(self.role)
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
+            if self.department is None:
+                self.department = Department.query.filter_by(default=True).first()
 
     # Create properties to set and verify password
     # Raise error if trying to read password

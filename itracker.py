@@ -1,7 +1,7 @@
 import os
 from flask_migrate import Migrate
 from app import create_app, db
-from app.models import User, Role, Permission
+from app.models import User, Role, Permission, Department
 
 
 
@@ -21,7 +21,7 @@ print("Admin: ", os.getenv('FLASK_ITRACKER_ADMIN'))
 @app.shell_context_processor
 def make_shell_context():
     return dict(db=db, User=User, Role=Role,
-                Permission=Permission)
+                Permission=Permission, Department=Department)
 
 
 # Add Unit tests

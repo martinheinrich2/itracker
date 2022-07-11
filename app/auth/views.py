@@ -2,7 +2,7 @@ from flask import render_template, redirect, request, url_for, flash, abort
 from flask_login import login_user, logout_user, login_required, current_user
 from . import auth
 from .. import db
-from ..models import User, Role, Permission
+from ..models import User, Role, Permission, Department
 from ..decorators import admin_required
 from .forms import LoginForm, ChangePasswordForm, RegistrationForm, ChangeUserAdminForm
 
@@ -82,11 +82,11 @@ def list_users():
     page = request.args.get('page', 1, type=int)
     # Get all users from the database
     users = User.query.order_by('name').paginate(page=page, per_page=ROWS_PER_PAGE)
-    return render_template('auth/users.html', users=users)
+    return render_template('auth/list_users.html', users=users)
 
 
 # Change User as Admin
-@auth.route('/user/<int:id>', methods=['GET', 'POST'])
+@auth.route('/edit-user/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def edit_user(id):
@@ -98,6 +98,7 @@ def edit_user(id):
         user.email = form.email.data
         user.name = form.name.data
         user.role_id = form.role_id.data
+        user.department_id = form.department_id.data
         db.session.add(user)
         db.session.commit()
         flash('User has been updated!')
@@ -105,5 +106,6 @@ def edit_user(id):
     form.email.data = user.email
     form.name.data = user.name
     form.role_id.data = user.role_id
+    form.department_id.data = user.department_id
     return render_template('auth/edit_user.html', form=form, user=user)
 
