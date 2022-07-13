@@ -1,14 +1,80 @@
 from flask import render_template, redirect, request, url_for, flash, abort
 from flask_login import login_user, logout_user, login_required, current_user
+from sqlalchemy.exc import SQLAlchemyError
 from . import auth
 from .. import db
 from ..models import User, Role, Permission, Department
 from ..decorators import admin_required
-from .forms import LoginForm, ChangePasswordForm, RegistrationForm, ChangeUserAdminForm
+from .forms import LoginForm, ChangePasswordForm, RegistrationForm, ChangeUserAdminForm, AddDepartmentForm, EditDepartmentForm
 
 
 # Pagination default value
 ROWS_PER_PAGE = 10
+
+
+# Add Department
+@auth.route('/add_department', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def add_department():
+    form = AddDepartmentForm()
+    if form.validate_on_submit():
+        department = Department(name=form.name.data)
+        db.session.add(department)
+        db.session.commit()
+        flash('Department has been added.')
+        return redirect(url_for('auth.list_departments'))
+    else:
+        flash('Sorry there was a problem adding the department. Please try again!')
+    return render_template('auth/add_department.html', form=form)
+
+
+# Delete Department
+@auth.route('/delete-department/<int:id>')
+@login_required
+@admin_required
+def delete_department(id):
+    department_to_delete = Department.query.get_or_404(id)
+    try:
+        db.session.delete(department_to_delete)
+        db.session.commit()
+        flash('Department was deletet!')
+        return redirect(url_for('.list_departments'))
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        message = f'There was a problem deleting the department! Error: {error}'
+        flash(message)
+        return redirect(url_for('.list_departments'))
+
+
+# Edit Department
+@auth.route('/edit-department/<int:id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def edit_department(id):
+    department = Department.query.get_or_404(id)
+    if not current_user.can(Permission.ADMIN):
+        abort(403)
+    form = EditDepartmentForm(department=department)
+    if form.validate_on_submit():
+        department.name = form.name.data
+        db.session.add(department)
+        db.session.commit()
+        flash('Department has been updated!')
+        return redirect(url_for('auth.list_departments'))
+    form.name.data = department.name
+    return render_template('auth/edit_department.html', department=department, form=form)
+
+# List all departments
+@auth.route('/list_departments')
+@login_required
+@admin_required
+def list_departments():
+    # Set the pagination configuration
+    page = request.args.get('page', 1, type=int)
+    # Get all users from the database
+    departments = Department.query.order_by('name').paginate(page=page, per_page=ROWS_PER_PAGE)
+    return render_template('auth/list_departments.html', departments=departments)
 
 
 # Change user password

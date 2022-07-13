@@ -38,6 +38,8 @@
 
                         {% if current_user.is_administrator() %}
                         <li><a class="dropdown-item" href="{{ url_for('auth.list_users') }}">List Users</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('auth.add_department') }}">Add Department</a></li>
+                         <li><a class="dropdown-item" href="{{ url_for('auth.list_departments') }}">List Departments</a> </li>
                         {% endif %}
 
                         <li>

@@ -5,6 +5,16 @@ from wtforms import ValidationError
 from ..models import User, Role, Department
 
 
+class AddDepartmentForm(FlaskForm):
+    name = StringField('Department', validators=[DataRequired(), Length(1, 64)])
+    submit = SubmitField('Add Department')
+
+
+class EditDepartmentForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), Length(1, 64)])
+    submit = SubmitField('Edit Department')
+
+
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Length(1, 64), Email()])
     password = PasswordField('Password', validators=[DataRequired()])

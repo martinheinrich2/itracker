@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+<title>{% block title %}ITracker - Edit User{% endblock %}</title>
+
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+{% endfor %}
+
+<div class="page-header">
+    <h1>Add Department</h1>
+</div>
+<div class="shadow p-3 mb-5 bg-body rounded">
+    <form method="POST">
+        <div class="form-group">
+            {{ form.hidden_tag() }}
+        </div>
+        <br/>
+        <div class="form-group">
+            {{ form.name.label(class="form-label") }}
+            {{ form.name(class="form-control") }}
+        </div>
+        <br/>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+
+
+    </form>
+
+</div>
+
+{% endblock %}
