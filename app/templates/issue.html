@@ -20,7 +20,7 @@
     Reported by: {{ issue.author.name }}<br/>
     Reported at: {{ moment(issue.timestamp).format('LLL') }} <br/>
     Description: {{ issue.description }} <br/>
-    Assigned to: {{ issue.assigned_to }} <br/>
+    Assigned to: {{ issue.department.name }} <br/>
     {% if issue.status %}
     Status: OPEN
     {% else %}

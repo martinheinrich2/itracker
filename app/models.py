@@ -10,6 +10,7 @@ class Department(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     users = db.relationship('User', backref='department', lazy='dynamic')
+    issues = db.relationship('Issue', backref='department', lazy='dynamic')
 
     @staticmethod
     def insert_departments():
@@ -175,7 +176,8 @@ class Issue(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     comments = db.relationship('Comment', backref='issue', lazy='dynamic')
-    assigned_to = db.Column(db.String(64))
+    # assigned_to = db.Column(db.String(64))
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
     status = db.Column(db.Boolean, default=True)
 
 

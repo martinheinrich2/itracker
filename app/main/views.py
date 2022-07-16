@@ -83,21 +83,23 @@ def edit_issue(id):
     issue = Issue.query.get_or_404(id)
     if not current_user.can(Permission.MODERATE) and not current_user.can(Permission.ADMIN):
         abort(403)
-    form = IssueForm()
+    form = IssueForm(issue=issue)
     if form.validate_on_submit():
-        issue.title=form.title.data
-        issue.description=form.description.data
-        issue.assigned_to=form.assigned_to.data
-        issue.status=form.status.data
+        issue.title = form.title.data
+        issue.description = form.description.data
+        # issue.assigned_to = form.assigned_to.data
+        issue.department_id = form.department_id.data
+        issue.status = form.status.data
         db.session.add(issue)
         db.session.commit()
         flash('The Issue has been updated!')
         return redirect(url_for('.issue', id=issue.id))
     form.title.data = issue.title
     form.description.data = issue.description
-    form.assigned_to.data = issue.assigned_to
+    # form.assigned_to.data = issue.assigned_to
+    form.department_id.data = issue.department_id
     form.status.data = issue.status
-    return render_template('edit_issue.html', form=form)
+    return render_template('edit_issue.html', form=form, issue=issue)
 
 
 # Edit comment
@@ -137,7 +139,6 @@ def delete_comment(id):
         return redirect(url_for('.issues'))
 
 
-
 # Show all Issues Page
 @main.route('/issues')
 @login_required
@@ -146,7 +147,7 @@ def issues():
     page = request.args.get('page', 1, type=int)
     # Grab all issues from the database, use SQLAlchemy pagination
     # issues = Issue.query.order_by(Issue.timestamp.desc())
-    issues = Issue.query.paginate(page=page, per_page=ROWS_PER_PAGE)
+    issues = Issue.query.order_by(Issue.timestamp.desc()).paginate(page=page, per_page=ROWS_PER_PAGE)
     return render_template('issues.html', issues=issues)
 
 
