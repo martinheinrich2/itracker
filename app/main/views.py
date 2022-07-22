@@ -18,6 +18,24 @@ def index():
     return render_template('index.html', methods=['GET', 'POST'])
 
 
+# Display issues for users department
+@main.route('/user-department-issues/<name>')
+def user_department_issues(name):
+    # Get user data
+    user = User.query.filter_by(name=name).first_or_404()
+    # Set the pagination configuration
+    page = request.args.get('page', 1, type=int)
+    filter_department_id = user.department_id
+    # print(type(filter_department_id))
+    issues = Issue.query.filter(Issue.department_id == filter_department_id).order_by(Issue.timestamp.desc()).paginate(
+        page, per_page=ROWS_PER_PAGE, error_out=False)
+
+    # Return all variables because jinja is unable to read them in this page.
+    return render_template('department_user.html', user=user, issues=issues.items, issues_pages=issues.pages, page=page,
+                           has_prev=issues.has_prev, has_next=issues.has_next, next_num=issues.next_num,
+                           prev_num=issues.prev_num)
+
+
 # Display user name
 @main.route('/user/<name>')
 def user(name):
@@ -25,7 +43,6 @@ def user(name):
     user = User.query.filter_by(name=name).first_or_404()
     # Set the pagination configuration
     page = request.args.get('page', 1, type=int)
-
     issues = user.issues.order_by(Issue.timestamp.desc()).paginate(
                                             page, per_page=ROWS_PER_PAGE, error_out=False)
     # Return all variables because jinja is unable to read them in this page.

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+
+<title>{% block title %}ITracker - {{ current_user.name }}{% endblock %}</title>
+
+{% block content %}
+<div class="page-header">
+    <h2>User: {{ current_user.name }}</h2>
+
+
+</div>
+<h3>Issues for Department: {{ current_user.department.name }}.</h3>
+{% include '_issues2.html' %}
+
+{% endblock %}
