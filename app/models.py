@@ -5,6 +5,18 @@ from flask_login import UserMixin, AnonymousUserMixin
 from . import db, login_manager
 
 
+# Class for comments
+class Comment(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    disabled = db.Column(db.Boolean)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    issue_id = db.Column(db.Integer, db.ForeignKey('issues.id'))
+
+
+# Class for departmens
 class Department(db.Model):
     __tablename__ = 'departments'
     id = db.Column(db.Integer, primary_key=True)
@@ -30,6 +42,22 @@ class Department(db.Model):
         return '<Name %r>' % self.name
 
 
+# Class for issues
+class Issue(db.Model):
+    __tablename__ = 'issues'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(64))
+    description = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    comments = db.relationship('Comment', backref='issue', lazy='dynamic')
+    # assigned_to = db.Column(db.String(64))
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
+    status = db.Column(db.String(64))
+    # status = db.Column(db.Boolean, default=True)
+
+
+# Class for permissions of user/roles
 class Permission:
     READ = 1
     COMMENT = 2
@@ -38,6 +66,7 @@ class Permission:
     ADMIN = 16
 
 
+# Class of user roles
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
@@ -166,26 +195,3 @@ login_manager.anonymous_user = AnonymousUser
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-
-class Issue(db.Model):
-    __tablename__ = 'issues'
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64))
-    description = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    comments = db.relationship('Comment', backref='issue', lazy='dynamic')
-    # assigned_to = db.Column(db.String(64))
-    department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
-    status = db.Column(db.Boolean, default=True)
-
-
-class Comment(db.Model):
-    __tablename__ = 'comments'
-    id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    disabled = db.Column(db.Boolean)
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    issue_id = db.Column(db.Integer, db.ForeignKey('issues.id'))

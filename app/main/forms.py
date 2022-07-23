@@ -12,18 +12,35 @@ class EditProfileForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
+class CreateIssueForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired('Please enter title')])
+    description = TextAreaField('Description', validators=[DataRequired('Please enter description.')])
+    department_id = SelectField('Department', coerce=int)
+    status = SelectField('Status', choices=[('Open', 'Open'),
+                                            ('In Progress', 'In Progress'),
+                                            ('In Review', 'In Review'),
+                                            ('Resolved', 'Resolved'),
+                                            ['Closed', 'Closed']])
+    submit = SubmitField('Submit')
+
+    # Get departments from database model
+    def __init__(self, *args, **kwargs):
+        super(CreateIssueForm, self).__init__(*args, **kwargs)
+        self.department_id.choices = [(department_id.id, department_id.name)
+                                      for department_id in Department.query.order_by(Department.name).all()]
+
+
+
 class IssueForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired('Please enter title')])
     description = TextAreaField('Description', validators=[DataRequired('Please enter description.')])
-    # assigned_to = StringField('Assigned to', validators=[DataRequired('Please enter department.')])
-    # assigned_to = SelectField('Assigned to:', choices=[('Electrician', 'Electrician'),
-    #                                                    ('Housekeeping', 'Housekeeping'),
-    #                                                    ('IT', 'IT'),
-    #                                                    ('Janitor', 'Janitor'),
-    #                                                    ('Plumber', 'Plumber')])
-
     department_id = SelectField('Department', coerce=int)
-    status = BooleanField('Status Open/Closed', default=True, validators=[AnyOf([True, False])])
+    # status = BooleanField('Status Open/Closed', default=True, validators=[AnyOf([True, False])])
+    status = SelectField('Status', choices=[('Open', 'Open'),
+                                            ('In Progress', 'In Progress'),
+                                            ('In Review', 'In Review'),
+                                            ('Resolved', 'Resolved'),
+                                            ['Closed', 'Closed']])
     submit = SubmitField('Submit')
 
     # Get departments from database model

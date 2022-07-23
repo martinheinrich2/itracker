@@ -4,7 +4,7 @@ from flask import render_template, flash, redirect, url_for, request, abort
 from flask_login import login_required, current_user
 from sqlalchemy.exc import SQLAlchemyError
 from . import main
-from .forms import EditProfileForm, IssueForm, CommentForm
+from .forms import EditProfileForm, IssueForm, CommentForm, CreateIssueForm
 from .. import db
 from ..models import User, Role, Permission, Issue, Comment
 from ..decorators import admin_required, permission_required
@@ -74,20 +74,19 @@ def edit_profile():
 @main.route('/add-issue', methods=['GET', 'POST'])
 @login_required
 def add_issue():
-    form = IssueForm()
+    form = CreateIssueForm()
     if current_user.can(Permission.WRITE) and form.validate_on_submit():
         issue = Issue(title=form.title.data,
                       description=form.description.data,
-                      assigned_to=form.assigned_to.data,
                       status=form.status.data,
+                      department_id=form.department_id.data,
                       author=current_user._get_current_object())
         # Clear the Form
         form.title.data = ''
         form.description.data = ''
-        form.assigned_to.data = ''
+        form.status.data = ''
         db.session.add(issue)
         db.session.commit()
-
         # Return Message
         flash('Issue has been submitted!')
     return render_template('add_issue.html', form=form)

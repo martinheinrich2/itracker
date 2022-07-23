@@ -33,6 +33,10 @@
 29. Add Admin or Moderator can edit/close issue
 30. Add Admin can list users and change user role, name
 31. Add Admin can edit and delete comment
+32. Add departments to model, modify admin edit user to assign department
+33. Connect issues to department
+34. Add list issues of same department as user
+35. Add mor options to status: Open, In Progress, In Review, Resolved, Closed
 
 
 ## How to prepare the database and run the app
