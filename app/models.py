@@ -51,10 +51,9 @@ class Issue(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     comments = db.relationship('Comment', backref='issue', lazy='dynamic')
-    # assigned_to = db.Column(db.String(64))
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
     status = db.Column(db.String(64))
-    # status = db.Column(db.Boolean, default=True)
+    priority = db.Column(db.String(64))
 
 
 # Class for permissions of user/roles

@@ -21,11 +21,8 @@
     Reported at: {{ moment(issue.timestamp).format('LLL') }} <br/>
     Description: {{ issue.description }} <br/>
     Assigned to: {{ issue.department.name }} <br/>
-    {% if issue.status %}
-    Status: OPEN
-    {% else %}
-    Status: CLOSED
-    {% endif %}
+    Priority   : {{ issue.priority }} <br/>
+    Status:    : {{ issue.status }}
 </div>
 
 <div>

@@ -79,12 +79,14 @@ def add_issue():
         issue = Issue(title=form.title.data,
                       description=form.description.data,
                       status=form.status.data,
+                      priority=form.priority.data,
                       department_id=form.department_id.data,
                       author=current_user._get_current_object())
         # Clear the Form
         form.title.data = ''
         form.description.data = ''
         form.status.data = ''
+        form.priority.data = ''
         db.session.add(issue)
         db.session.commit()
         # Return Message
@@ -103,18 +105,18 @@ def edit_issue(id):
     if form.validate_on_submit():
         issue.title = form.title.data
         issue.description = form.description.data
-        # issue.assigned_to = form.assigned_to.data
         issue.department_id = form.department_id.data
         issue.status = form.status.data
+        issue.priority = form.priority.data
         db.session.add(issue)
         db.session.commit()
         flash('The Issue has been updated!')
         return redirect(url_for('.issue', id=issue.id))
     form.title.data = issue.title
     form.description.data = issue.description
-    # form.assigned_to.data = issue.assigned_to
     form.department_id.data = issue.department_id
     form.status.data = issue.status
+    form.priority.data = issue.priority
     return render_template('edit_issue.html', form=form, issue=issue)
 
 

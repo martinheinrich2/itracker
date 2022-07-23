@@ -21,6 +21,10 @@ class CreateIssueForm(FlaskForm):
                                             ('In Review', 'In Review'),
                                             ('Resolved', 'Resolved'),
                                             ['Closed', 'Closed']])
+    priority = SelectField('Priority', choices=[('Critical', 'Critical'),
+                                                ('High', 'High'),
+                                                ('Medium', 'Medium'),
+                                                ('Low', 'Low')])
     submit = SubmitField('Submit')
 
     # Get departments from database model
@@ -41,6 +45,10 @@ class IssueForm(FlaskForm):
                                             ('In Review', 'In Review'),
                                             ('Resolved', 'Resolved'),
                                             ['Closed', 'Closed']])
+    priority = SelectField('Priority', choices=[('Critical', 'Critical'),
+                                                ('High', 'High'),
+                                                ('Medium', 'Medium'),
+                                                ('Low', 'Low')])
     submit = SubmitField('Submit')
 
     # Get departments from database model

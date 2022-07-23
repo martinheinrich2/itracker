@@ -6,6 +6,7 @@
         <th>Author</th>
         <th>Reported</th>
         <th>Status</th>
+        <th>Priority</th>
       </tr>
     </thead>
 
@@ -17,15 +18,18 @@
         <td>{{ moment(issue.timestamp).format('LLL') }}</td>
         <td>
             {% if issue.status == "Open" %}
-                <span class="badge rounded-pill bg-primary">OPEN</span>
+                <span class="badge rounded-pill bg-primary">Open</span>
             {% elif issue.status == "In Progress" %}
                 <span class="badge rounded-pill bg-info">In Progress</span>
             {% elif issue.status == "In Review" %}
                 <span class="badge rounded-pill bg-warning">In Review</span>
+            {% elif issue.status == "Resolved" %}
+                <span class="badge rounded-pill bg-secondary">Resolved</span>
             {% else %}
-                <span class="badge rounded-pill bg-success">CLOSED</span>
+                <span class="badge rounded-pill bg-success">Closed</span>
             {% endif %}
         </td>
+        <td>{{ issue.priority }}</td>
       </tr>
      {% endfor %}
     </tbody>

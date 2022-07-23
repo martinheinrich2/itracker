@@ -4,7 +4,6 @@ from app import create_app, db
 from app.models import User, Role, Permission, Department
 
 
-
 # app = Flask(__name__)
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 migrate = Migrate(app, db)
