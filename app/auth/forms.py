@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, EmailField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, EmailField, SelectField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
 from ..models import User, Role, Department
@@ -49,12 +49,11 @@ class ChangeUserAdminForm(FlaskForm):
     email = EmailField('Email', validators=[DataRequired(), Length(1, 64), Email()])
     name = StringField('Name:', validators=[DataRequired(), Length(1, 64), Regexp('[A-Za-z]', 0,
                                                                                   'Usernames must have only letters.')])
-    # role_id = SelectField('Role:', choices=[('1', 'User'),
-                                       # ('2', 'Moderator'),
-                                       # ('3', 'Administrator')], coerce=int)
+    job_description = StringField('Job Description', validators=[Length(0, 64)])
     # SelectField takes a list of tuples
     role_id = SelectField('Role', coerce=int)
     department_id = SelectField('Department', coerce=int)
+    account_active  = BooleanField('Active', default='checked')
     submit = SubmitField('Submit')
 
     # Get roles from database model

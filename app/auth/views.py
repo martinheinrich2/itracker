@@ -101,16 +101,19 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.verify_password(form.password.data):
-            # login_user() function records user logged in and optional
-            # remember_me boolean value, setting a long-term cookie if true
-            login_user(user)
-            # Get the original URL requested by the user
-            next = request.args.get('next')
-            # get the original URL to prevent malicious user from redirecting users to another site
-            if next is None or not next.startswith('/'):
-                next = url_for('main.index')
-            flash('Logged in successfully.')
-            return redirect(next)
+            if not user.account_active:
+                flash('Account Disabled')
+            else:
+                # login_user() function records user logged in and optional
+                # remember_me boolean value, setting a long-term cookie if true
+                login_user(user)
+                # Get the original URL requested by the user
+                next = request.args.get('next')
+                # get the original URL to prevent malicious user from redirecting users to another site
+                if next is None or not next.startswith('/'):
+                    next = url_for('main.index')
+                flash('Logged in successfully.')
+                return redirect(next)
         flash('Invalid Name or Password!')
     return render_template('auth/login.html', form=form)
 
@@ -163,15 +166,19 @@ def edit_user(id):
     if form.validate_on_submit():
         user.email = form.email.data
         user.name = form.name.data
+        user.job_description = form.job_description.data
         user.role_id = form.role_id.data
         user.department_id = form.department_id.data
+        user.account_active = form.account_active.data
         db.session.add(user)
         db.session.commit()
         flash('User has been updated!')
         return redirect(url_for('auth.list_users'))
     form.email.data = user.email
     form.name.data = user.name
+    form.job_description.data = user.job_description
     form.role_id.data = user.role_id
     form.department_id.data = user.department_id
+    form.account_active.data = user.account_active
     return render_template('auth/edit_user.html', form=form, user=user)
 

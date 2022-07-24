@@ -14,7 +14,7 @@
 {% endfor %}
 
 <div class="page-header">
-    <h1>Edit Profile for {{ current_user.name }}</h1>
+    <h1>Edit Profile for {{ user.name }} by {{ current_user.name }}</h1>
 </div>
 <div class="shadow p-3 mb-5 bg-body rounded">
     <form method="POST">
@@ -32,6 +32,11 @@
             {{ form.name(class="form-control") }}
         </div>
         <br/>
+        <div class="form-group">
+            {{ form.job_description.label(class="form-label")}}
+            {{ form.job_description(class="form-control")}}
+        </div>
+        <br/>
         <div class="field">
             {{ form.role_id.label(class="switch") }}
             {{ form.role_id(class="switch") }}
@@ -42,6 +47,14 @@
             {{ form.department_id(class="switch") }}
         </div>
         <br/>
+        {% if current_user.name == user.name %}
+        {% else %}
+        <div class="field">
+            {{ form.account_active.label }}
+            {{ form.account_active() }}
+        </div>
+        <br/>
+        {% endif %}
         <div class="form-group">
             {{ form.submit(class="btn btn-primary") }}
         </div>

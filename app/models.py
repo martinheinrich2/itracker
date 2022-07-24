@@ -135,6 +135,7 @@ class User(UserMixin, db.Model):
     issues = db.relationship('Issue', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
+    account_active = db.Column(db.Boolean, default=True)
 
     # Assigns the role Administrator if the email matches a config value,
     # otherwise set default role to User.
@@ -148,8 +149,8 @@ class User(UserMixin, db.Model):
                 print(self.role)
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
-            if self.department is None:
-                self.department = Department.query.filter_by(default=True).first()
+            # if self.department is None:
+            #    self.department = Department.query.filter_by(default=True).first()
 
     # Create properties to set and verify password
     # Raise error if trying to read password

@@ -24,6 +24,7 @@
         <th>Joined</th>
         <th>Role</th>
         <th>Department</th>
+        <th>Status</th>
       </tr>
     </thead>
 
@@ -35,6 +36,13 @@
         <td>{{ moment(user.user_added).format('LLL') }}</td>
         <td>{{ user.role.name }}</td>
         <td>{{ user.department.name }}</td>
+        <td>
+            {% if user.account_active %}
+                <span class="badge rounded-pill bg-primary">Active</span>
+            {%  else %}
+                <span class="badge rounded-pill bg-warning">Disabled</span>
+            {% endif %}
+        </td>
 
       </tr>
      {% endfor %}

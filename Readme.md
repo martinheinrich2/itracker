@@ -37,6 +37,8 @@
 33. Connect issues to department
 34. Add list issues of same department as user
 35. Add mor options to status: Open, In Progress, In Review, Resolved, Closed
+36. Add priorities to issues
+37. Add Admin can disable user account, except its own. Login fails for disabled accounts.
 
 
 ## How to prepare the database and run the app
