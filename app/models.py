@@ -16,7 +16,7 @@ class Comment(db.Model):
     issue_id = db.Column(db.Integer, db.ForeignKey('issues.id'))
 
 
-# Class for departmens
+# Class for departments
 class Department(db.Model):
     __tablename__ = 'departments'
     id = db.Column(db.Integer, primary_key=True)
@@ -54,6 +54,18 @@ class Issue(db.Model):
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
     status = db.Column(db.String(64))
     priority = db.Column(db.String(64))
+
+    # Add create dictionary of data for api
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'author_id': self.author.name,
+            'timestamp': self.timestamp,
+            'department_id': self.department_id,
+            'status': self.status,
+            'priority': self.priority
+        }
 
 
 # Class for permissions of user/roles

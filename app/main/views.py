@@ -8,6 +8,7 @@ from .forms import EditProfileForm, IssueForm, CommentForm, CreateIssueForm
 from .. import db
 from ..models import User, Role, Permission, Issue, Comment
 from ..decorators import admin_required, permission_required
+from sqlalchemy import or_
 
 # Pagination default number of rows
 ROWS_PER_PAGE = 10
@@ -167,6 +168,53 @@ def issues():
     # issues = Issue.query.order_by(Issue.timestamp.desc())
     issues = Issue.query.order_by(Issue.timestamp.desc()).paginate(page=page, per_page=ROWS_PER_PAGE)
     return render_template('issues.html', issues=issues)
+
+
+# Test show all issues page wit Grid.js support
+@main.route('/issues-list')
+@login_required
+def issues_list():
+    return render_template('issues_list.html')
+
+
+# Create API data
+@main.route('/api/data')
+def data():
+    query = Issue.query
+
+    # search filter
+    search = request.args.get('search')
+    if search:
+        query = query.filter(Issue.title.like(f'%{search}%'))
+    total = query.count()
+
+    # sorting
+    sort = request.args.get('sort')
+    if sort:
+        order = []
+        for s in sort.split(','):
+            direction = s[0]
+            name = s[1:]
+            if name not in ['title', 'id', 'author', 'timestamp', 'status', 'priority']:
+                name = 'title'
+            col = getattr(Issue, name)
+            if direction == '-':
+                col = col.desc()
+            order.append(col)
+        if order:
+            query = query.order_by(*order)
+
+    # pagination
+    start = request.args.get('start', type=int, default=-1)
+    length = request.args.get('length', type=int, default=-1)
+    if start != -1 and length != -1:
+        query = query.offset(start).limit(length)
+
+    # response
+    return {
+        'data': [issue.to_dict() for issue in query],
+        'total': total,
+    }
 
 
 # Show individual Issue

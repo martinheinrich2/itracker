@@ -1,0 +1,58 @@
+<html>
+
+  <body>
+    <div>
+      <div id="table"></div>
+    </div>
+    <script>
+      const updateUrl = (prev, query) => {
+        return prev + (prev.indexOf('?') >= 0 ? '&' : '?') + new URLSearchParams(query).toString();
+      };
+
+      new gridjs.Grid({
+        columns: [
+          { id: 'title', name: 'Title' },
+          { id: 'id', name: 'ID', width: '100px', formatter: (cell) =>
+                  gridjs.html('<a href="issue/' + cell + '">' + cell + '</a>')
+          },
+          { id: 'author_id', name: 'Author', sort: false },
+          { id: 'timestamp', name: 'Reported' },
+          { id: 'status', name: 'Status' },
+          { id: 'priority', name: 'Priority'},
+        ],
+        server: {
+          url: '/api/data',
+          then: results => results.data,
+          total: results => results.total,
+        },
+        search: {
+          enabled: true,
+          server: {
+            url: (prev, search) => {
+              return updateUrl(prev, {search});
+            },
+          },
+        },
+        sort: {
+          enabled: true,
+          multiColumn: true,
+          server: {
+            url: (prev, columns) => {
+              const columnIds = ['title', 'id', 'author_id', 'timestamp', 'status', 'priority'];
+              const sort = columns.map(col => (col.direction === 1 ? '+' : '-') + columnIds[col.index]);
+              return updateUrl(prev, {sort});
+            },
+          },
+        },
+        pagination: {
+          enabled: true,
+          server: {
+            url: (prev, page, limit) => {
+              return updateUrl(prev, {start: page * limit, length: limit});
+            },
+          },
+        },
+      }).render(document.getElementById('table'));
+    </script>
+  </body>
+</html>

@@ -29,6 +29,9 @@
                             <a class="dropdown-item" href="{{ url_for('main.issues') }}">All Issues</a>
                         </li>
                         <li>
+                            <a class="dropdown-item" href="{{ url_for('main.issues_list') }}">Sortable Issues</a>
+                        </li>
+                        <li>
                             <a class="dropdown-item" href="{{ url_for('main.user_department_issues', name=current_user.name) }}">Department Issues</a>
                         </li>
                     </ul>

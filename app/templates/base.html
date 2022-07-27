@@ -7,11 +7,13 @@
     <title>ITracker</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('.static', filename='css/style.css' )}}">
     <link rel="stylesheet" href="{{ url_for('.static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('.static', filename='gridjs-5.0.2/dist/theme/mermaid.min.css') }}">
 </head>
 
 <body>
     <script src="{{ url_for('.static', filename='js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ url_for('.static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('.static', filename='gridjs-5.0.2/dist/gridjs.umd.js') }}"></script>
 
     {% include 'navbar.html'%}
 

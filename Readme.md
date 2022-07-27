@@ -1,6 +1,6 @@
 # Issue Tracker App
 
-## Project steps using PyCharm, sets up virtual environment
+## Project steps
 
 1. Set up folder structure, e.g. like in the Book "Flask Web Development and also on GitHub [https://github.com/miguelgrinberg/flasky](https://github.com/miguelgrinberg/flasky).
 2. Download and install PostgreSQL
@@ -39,7 +39,15 @@
 35. Add mor options to status: Open, In Progress, In Review, Resolved, Closed
 36. Add priorities to issues
 37. Add Admin can disable user account, except its own. Login fails for disabled accounts.
+38. Add sort issues by title, status and priority (using grid.js)
 
+
+# Language/Framework
+- Python/Flask
+- Bootstrap
+- grid.js
+- PostgreSQL
+- SQLAlchemy
 
 ## How to prepare the database and run the app
 
