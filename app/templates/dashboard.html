@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+{% endfor %}
+<div class="bg-light">
+<div class="border border-primary shadow-sm">
+
+    <h1>itracker - Dashboard</h1>
+    <br/>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Issue Status</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>All issues</td>
+                <td>{{ all_issues }}</td>
+            </tr>
+            <tr class="table-primary">
+                <td>Open Issues</td>
+                <td>{{ open_issues }}</td>
+            </tr>
+            <tr class="table-info">
+                <td>In Progress Issues</td>
+                <td>{{ in_progress_issues }}</td>
+            </tr>
+             <tr class="table-warning">
+                <td>In Review Issues</td>
+                <td>{{ in_review_issues }}</td>
+            </tr>
+            <tr class="table-secondary">
+                <td>Resolved Issues</td>
+                <td>{{ resolved_issues }}</td>
+            </tr>
+            <tr class="table-success">
+                <td>Closed Issues</td>
+                <td>{{ closed_issues }}</td>
+            </tr>
+        </tbody>
+
+<div/>
+
+</div>
+{% endblock %}

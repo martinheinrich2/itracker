@@ -19,6 +19,22 @@ def index():
     return render_template('index.html', methods=['GET', 'POST'])
 
 
+@main.route('/dashboard')
+def dashboard():
+    all_issues = Issue.query.count()
+    open_issues = Issue.query.filter(Issue.status == 'Open').count()
+    in_progress_issues = Issue.query.filter(Issue.status == 'In Progress').count()
+    in_review_issues = Issue.query.filter(Issue.status == 'In Review').count()
+    resolved_issues = Issue.query.filter(Issue.status == 'Resolved').count()
+    closed_issues = Issue.query.filter(Issue.status == 'Closed').count()
+    return render_template('dashboard.html', methods=['GET', 'POST'], open_issues=open_issues,
+                           in_progress_issues=in_progress_issues,
+                           in_review_issues=in_review_issues,
+                           resolved_issues=resolved_issues,
+                           closed_issues=closed_issues,
+                           all_issues=all_issues)
+
+
 # Display issues for users department
 @main.route('/user-department-issues/<name>')
 def user_department_issues(name):

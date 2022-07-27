@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 
-
 {% block content %}
 
 {% for message in get_flashed_messages() %}
@@ -11,15 +10,14 @@
 </div>
 
 {% endfor %}
-
-
-
-Hello,
-{% if current_user.is_authenticated %}
-{{ current_user.name }}
-{% else %}
-Stranger
-{% endif %}
-
+<div class="border border-primary shadow-sm text-center bg-light">
+    <h1>itracker</h1>
+    <br/>
+    {% if current_user.is_authenticated %}
+    <h2>Welcome {{ current_user.name }}<h2/>
+    {% else %}
+    <h2>Please Log In to Create Issues</h2>
+    {% endif %}
+<div/>
 
 {% endblock %}

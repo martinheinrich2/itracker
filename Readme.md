@@ -1,5 +1,7 @@
 # Issue Tracker App
 
+Follows the recommendations from Miguel Grinbergs Book 'Flask Web Development' on how to create a complex flask app.
+
 ## Project steps
 
 1. Set up folder structure, e.g. like in the Book "Flask Web Development and also on GitHub [https://github.com/miguelgrinberg/flasky](https://github.com/miguelgrinberg/flasky).
@@ -40,9 +42,10 @@
 36. Add priorities to issues
 37. Add Admin can disable user account, except its own. Login fails for disabled accounts.
 38. Add sort issues by title, status and priority (using grid.js)
+39. Add simple dashboard
 
 
-# Language/Framework
+## Language/Framework
 - Python/Flask
 - Bootstrap
 - grid.js
