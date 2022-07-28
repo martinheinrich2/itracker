@@ -27,12 +27,20 @@ def dashboard():
     in_review_issues = Issue.query.filter(Issue.status == 'In Review').count()
     resolved_issues = Issue.query.filter(Issue.status == 'Resolved').count()
     closed_issues = Issue.query.filter(Issue.status == 'Closed').count()
+    priority_high_issues = Issue.query.filter(Issue.priority == 'High').count()
+    priority_medium_issues = Issue.query.filter(Issue.priority == 'Medium').count()
+    priority_low_issues = Issue.query.filter(Issue.priority == 'Low').count()
+    priority_critical_issues = Issue.query.filter(Issue.priority == 'Critical').count()
     return render_template('dashboard.html', methods=['GET', 'POST'], open_issues=open_issues,
                            in_progress_issues=in_progress_issues,
                            in_review_issues=in_review_issues,
                            resolved_issues=resolved_issues,
                            closed_issues=closed_issues,
-                           all_issues=all_issues)
+                           all_issues=all_issues,
+                           priority_high_issues=priority_high_issues,
+                           priority_medium_issues=priority_medium_issues,
+                           priority_low_issues=priority_low_issues,
+                           priority_critical_issues=priority_critical_issues)
 
 
 # Display issues for users department
@@ -201,7 +209,12 @@ def data():
     # search filter
     search = request.args.get('search')
     if search:
-        query = query.filter(Issue.title.like(f'%{search}%'))
+        query = query.filter(db.or_(
+            Issue.title.like(f'%{search}%'),
+            Issue.status.like(f'%{search}%'),
+            Issue.priority.like(f'%{search}%')
+        ))
+
     total = query.count()
 
     # sorting

@@ -43,6 +43,7 @@ Follows the recommendations from Miguel Grinbergs Book 'Flask Web Development' o
 37. Add Admin can disable user account, except its own. Login fails for disabled accounts.
 38. Add sort issues by title, status and priority (using grid.js)
 39. Add simple dashboard
+40. Add additional filters to issues list
 
 
 ## Language/Framework

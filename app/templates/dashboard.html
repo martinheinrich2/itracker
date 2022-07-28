@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 
-
 {% block content %}
 
 {% for message in get_flashed_messages() %}
@@ -10,47 +9,83 @@
 </div>
 
 {% endfor %}
-<div class="bg-light">
-<div class="border border-primary shadow-sm">
-
-    <h1>itracker - Dashboard</h1>
+<div class="container-md">
+    <h1 class="text-center">itracker - Dashboard</h1>
     <br/>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Issue Status</th>
-                <th>Count</th>
-            </tr>
-        </thead>
 
-        <tbody>
-            <tr>
-                <td>All issues</td>
-                <td>{{ all_issues }}</td>
-            </tr>
-            <tr class="table-primary">
-                <td>Open Issues</td>
-                <td>{{ open_issues }}</td>
-            </tr>
-            <tr class="table-info">
-                <td>In Progress Issues</td>
-                <td>{{ in_progress_issues }}</td>
-            </tr>
-             <tr class="table-warning">
-                <td>In Review Issues</td>
-                <td>{{ in_review_issues }}</td>
-            </tr>
-            <tr class="table-secondary">
-                <td>Resolved Issues</td>
-                <td>{{ resolved_issues }}</td>
-            </tr>
-            <tr class="table-success">
-                <td>Closed Issues</td>
-                <td>{{ closed_issues }}</td>
-            </tr>
-        </tbody>
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col col-md-auto">
+                <div class="border border-primary shadow-sm">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Issue Status</th>
+                                <th>Count</th>
+                            </tr>
+                        </thead>
 
-<div/>
+                        <tbody>
+                            <tr>
+                                <td>All issues</td>
+                                <td>{{ all_issues }}</td>
+                            </tr>
+                            <tr class="table-primary">
+                                <td>Open Issues</td>
+                                <td>{{ open_issues }}</td>
+                            </tr>
+                            <tr class="table-info">
+                                <td>In Progress Issues</td>
+                                <td>{{ in_progress_issues }}</td>
+                            </tr>
+                             <tr class="table-warning">
+                                <td>In Review Issues</td>
+                                <td>{{ in_review_issues }}</td>
+                            </tr>
+                            <tr class="table-secondary">
+                                <td>Resolved Issues</td>
+                                <td>{{ resolved_issues }}</td>
+                            </tr>
+                            <tr class="table-success">
+                                <td>Closed Issues</td>
+                                <td>{{ closed_issues }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col col-md-auto">
+                <div class="border border-primary shadow-sm">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Issue Priority</th>
+                                <th>Count</th>
+                            </tr>
+                        </thead>
 
+                        <tbody>
+                            <tr class="table-danger">
+                                <td>Critical</td>
+                                <td>{{ priority_critical_issues }}</td>
+                            </tr>
+                            <tr class="table-warning">
+                                <td>High</td>
+                                <td>{{ priority_high_issues }}</td>
+                            </tr>
+                            <tr class="table-info">
+                                <td>Medium</td>
+                                <td>{{ priority_medium_issues }}</td>
+                            </tr>
+                                <tr class="table-light">
+                                <td>Low</td>
+                                <td>{{ priority_low_issues }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
