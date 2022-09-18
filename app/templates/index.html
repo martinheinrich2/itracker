@@ -12,6 +12,7 @@
 {% endfor %}
 <div class="border border-primary shadow-sm text-center bg-light">
     <h1>itracker</h1>
+    <img class="mb-4" src="{{ url_for('.static', filename='img/iTracker-logo2.png') }}" alt="" width="72" height="57">
     <br/>
     {% if current_user.is_authenticated %}
     <h2>Welcome {{ current_user.name }}<h2/>
