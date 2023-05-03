@@ -3,12 +3,12 @@ from flask_migrate import Migrate
 from app import create_app, db
 from app.models import User, Role, Permission, Department
 
-
 # app = Flask(__name__)
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 migrate = Migrate(app, db)
 print("Current configuration: ", os.getenv('FLASK_CONFIG'))
 print("Admin: ", os.getenv('FLASK_ITRACKER_ADMIN'))
+
 
 # you need pip install python-dotenv to
 # app.config.from_prefixed_env()
